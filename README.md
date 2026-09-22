@@ -52,7 +52,7 @@ Current fork-specific support:
 
 | MCU family | Status | Evidence |
 | --- | --- | --- |
-| GigaDevice GD32E50x (GD32E503) | **Programming verified** | CMSIS-DAP/SWD probe, Flash erase/program, verify, and reset/run were completed on a GD32E503. The user-facing Flash driver name is `gd32e50x`. |
+| GigaDevice GD32E503 (GD32E50x series entry) | **Programming verified** | CMSIS-DAP/SWD probe, Flash erase/program, verify, and reset/run were completed on a GD32E503. The user-facing Flash driver name is `gd32e50x`. Other GD32E50x members require their own hardware evidence before receiving this status. |
 
 ### Maintenance rules
 
@@ -66,8 +66,13 @@ Every new MCU-family addition must meet these rules:
 3. Add a support-matrix entry with the real adapter, board/chip, and completed
    test stages. An untested device is `Experimental`, not `Verified`.
 4. Build the complete project and run static checks before publishing.
-5. Submit generally useful, independently maintainable changes upstream when
-   possible. Keep this fork's delta small.
+5. Keep this fork's delta small and independently maintainable. Any upstream
+   contribution requires a separate, explicit decision; this repository does
+   not submit changes upstream by default.
+
+Use the [new-MCU support checklist](doc/manual/new_mcu_support_checklist.md)
+for every MCU-family addition. A pull request must record every applicable
+item or explain why it is not applicable.
 
 Vendor forks are useful sources of evidence and candidate patches, but their
 entire histories must not be merged wholesale. Each imported change must be
