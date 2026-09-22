@@ -1756,3 +1756,24 @@ const struct flash_driver stm32f1x_flash = {
 	.info = get_stm32x_info,
 	.free_driver_priv = default_flash_free_driver_priv,
 };
+
+/*
+ * GD32E50x has its own public driver name, while its flash controller uses
+ * the verified STM32F1x-compatible implementation above.  Do not attach the
+ * stm32f1x command group here: registering it twice would duplicate commands
+ * in the global command namespace.
+ */
+const struct flash_driver gd32e50x_flash = {
+	.name = "gd32e50x",
+	.flash_bank_command = stm32x_flash_bank_command,
+	.erase = stm32x_erase,
+	.protect = stm32x_protect,
+	.write = stm32x_write,
+	.read = default_flash_read,
+	.probe = stm32x_probe,
+	.auto_probe = stm32x_auto_probe,
+	.erase_check = default_flash_blank_check,
+	.protect_check = stm32x_protect_check,
+	.info = get_stm32x_info,
+	.free_driver_priv = default_flash_free_driver_priv,
+};
