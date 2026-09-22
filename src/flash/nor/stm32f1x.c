@@ -761,6 +761,10 @@ static int stm32x_get_property_addr(struct target *target, struct stm32x_propert
 		addr->device_id = 0x40015800;
 		addr->flash_size = 0x1FFFF7E0;
 		return ERROR_OK;
+	case CORTEX_M33_PARTNO: /* GD32E50x devices */
+		addr->device_id = 0xE0044000;
+		addr->flash_size = 0x1FFFF7E0;
+		return ERROR_OK;
 	case CORTEX_M_PARTNO_INVALID:
 		/* Check for GD32VF103 with RISC-V CPU */
 		if (strcmp(target_type_name(target), "riscv") == 0
@@ -841,7 +845,14 @@ static int stm32x_probe(struct flash_bank *bank)
 		stm32x_info->default_rdp = 0xAA;
 		stm32x_info->can_load_options = true;
 		break;
-	case 0x444: /* stm32f03x */
+	case 0x444: /* stm32f03x, gd32e50x */
+		if (rev_id == 0x2003) { /* gd32e50x */
+			page_size = 8192;
+			stm32x_info->ppage_size = 1;
+			max_flash_size_in_kb = 512;
+			break;
+		}
+		/* fallthrough */
 	case 0x445: /* stm32f04x */
 		page_size = 1024;
 		stm32x_info->ppage_size = 4;
@@ -1274,6 +1285,10 @@ static int get_stm32x_info(struct flash_bank *bank, struct command_invocation *c
 		break;
 
 	case 0x444:
+		if (rev_id == 0x2003) {
+			device_str = "GD32E50x";
+			break;
+		}
 		device_str = "STM32F03x";
 		rev_str = get_stm32f0_revision(rev_id);
 		break;
