@@ -24,6 +24,71 @@ This README file contains an overview of the following topics:
 - the installation and build process,
 - packaging tips.
 
+## This fork: validated new-MCU support
+
+`tangsangsimida/openocd` is a thin, upstream-synchronised OpenOCD
+distribution for developers who need to program and debug recently released
+MCU families without switching between vendor-specific OpenOCD binaries.
+
+It is **not** a replacement implementation of OpenOCD and it does not claim
+support for every MCU. Its value is the integration and verification layer:
+
+- track upstream OpenOCD closely;
+- integrate small, maintainable additions for MCU families that are not yet
+  available in upstream releases;
+- package one binary containing all support that has been accepted here; and
+- publish the exact hardware evidence behind every supported family.
+
+### Support status
+
+| Status | Meaning |
+| --- | --- |
+| **Verified** | Tested on physical hardware: probe, erase/program, verify, reset/run, and GDB connection. |
+| **Programming verified** | Tested on physical hardware through probe, erase/program, verify, and reset/run; GDB validation is still outstanding. |
+| **Experimental** | Builds or identifies the target, but does not yet have complete physical-hardware evidence. Do not use for production programming. |
+| **Planned** | Documentation and implementation investigation only; no support claim. |
+
+Current fork-specific support:
+
+| MCU family | Status | Evidence |
+| --- | --- | --- |
+| GigaDevice GD32E503 (GD32E50x series entry) | **Programming verified** | CMSIS-DAP/SWD probe, Flash erase/program, verify, and reset/run were completed on a GD32E503. The user-facing Flash driver name is `gd32e50x`. Other GD32E50x members require their own hardware evidence before receiving this status. |
+
+### Maintenance rules
+
+Every new MCU-family addition must meet these rules:
+
+1. Keep the change small and scoped to the correct target configuration and
+   Flash driver; do not force unrelated families into a compatibility path.
+2. Cite public register/reference documentation and retain the device ID,
+   revision, Flash geometry, protection, and reset assumptions in the commit
+   or target configuration.
+3. Add a support-matrix entry with the real adapter, board/chip, and completed
+   test stages. An untested device is `Experimental`, not `Verified`.
+4. Build the complete project and run static checks before publishing.
+5. Keep this fork's delta small and independently maintainable. Any upstream
+   contribution requires a separate, explicit decision; this repository does
+   not submit changes upstream by default.
+
+Use the [new-MCU support checklist](doc/manual/new_mcu_support_checklist.md)
+for every MCU-family addition. A pull request must record every applicable
+item or explain why it is not applicable.
+
+Vendor forks are useful sources of evidence and candidate patches, but their
+entire histories must not be merged wholesale. Each imported change must be
+reviewed against current upstream and validated on hardware.
+
+### Branch and remote policy
+
+- `upstream` points to `https://github.com/openocd-org/openocd.git`.
+- `origin` points to this fork.
+- Feature branches use focused names such as `gd32e50x-support`.
+- Release branches contain only upstream commits plus reviewed, documented,
+  and verified support additions.
+
+This policy keeps the project useful as a single OpenOCD distribution while
+preserving a practical path to upstream contribution and regular rebasing.
+
 ## Quickstart for the impatient
 
 If you have a popular board then just start OpenOCD with its config,

@@ -8543,6 +8543,25 @@ The @var{num} parameter is a value shown by @command{flash banks}.
 @end deffn
 @end deffn
 
+@deffn {Flash Driver} {gd32e50x}
+This driver supports the GD32E50x Cortex-M33 microcontroller series from
+GigaDevice. It has its own public driver name and reuses the
+hardware-verified compatible Flash-controller operations used by the
+@command{stm32f1x} driver.
+
+Hardware validation is recorded per part number in this project's support
+matrix. At present, the GD32E503 has been tested for probe, erase/program,
+verify, and reset/run; other GD32E50x members must not be assumed to have the
+same validation status.
+
+@example
+flash bank $_FLASHNAME gd32e50x 0x08000000 0 0 0 $_TARGETNAME
+@end example
+
+Use the generic @command{flash} commands for erase, programming and
+protection operations. There are no @command{gd32e50x}-specific commands.
+@end deffn
+
 @deffn {Flash Driver} {stm32f2x}
 All members of the STM32F2, STM32F4 and STM32F7 microcontroller families from STMicroelectronics
 include internal flash and use ARM Cortex-M3/M4/M7 cores.
